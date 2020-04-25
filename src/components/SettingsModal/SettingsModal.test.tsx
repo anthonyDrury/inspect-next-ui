@@ -1,8 +1,9 @@
 import React from "react";
 import { render, getByTestId, queryByTestId } from "@testing-library/react";
 import { Provider } from "react-redux";
-import store from "../../redux/store/store";
+import store, { configureStore } from "../../redux/store/store";
 import SettingsModal from "./SettingsModal";
+import { initialState } from "../../common/constant";
 
 test("renders SettingsModal", (): void => {
   const { container } = render(
@@ -11,7 +12,7 @@ test("renders SettingsModal", (): void => {
     </Provider>
   );
   const gearIconButton = getByTestId(container, "gear-icon");
-  expect(gearIconButton).toBeInTheDocument();
+  expect(gearIconButton).not.toBeNull();
 
   expect(queryByTestId(container, "settings-modal-header")).toBeNull();
 });
@@ -27,10 +28,10 @@ test("clicking the gear button opens the settings modal", (): void => {
 
   const modalHeader = document.getElementById("settings-modal-header");
 
-  expect(modalHeader).toBeInTheDocument();
+  expect(modalHeader).not.toBeNull();
 });
 
-test("clicking the close button closes the settings modal", (): void => {
+it("clicking the close button closes the settings modal", (): void => {
   const { container } = render(
     <Provider store={store}>
       <SettingsModal />
@@ -40,7 +41,7 @@ test("clicking the close button closes the settings modal", (): void => {
   gearIconButton.click();
 
   const modalCloseButton = document.getElementById("settings-modal-close");
-  expect(modalCloseButton).toBeInTheDocument();
+  expect(modalCloseButton).not.toBeNull();
   modalCloseButton!.click();
 
   const modalHeader = document.getElementById("settings-modal-header");
@@ -49,8 +50,9 @@ test("clicking the close button closes the settings modal", (): void => {
 
 test("clicking the reset button triggers the reset action", (): void => {
   const resetSettings = jest.fn();
+  const mockStore = configureStore(initialState);
   const { container } = render(
-    <Provider store={store}>
+    <Provider store={mockStore}>
       <SettingsModal {...{ resetSettings }} />
     </Provider>
   );
@@ -58,7 +60,7 @@ test("clicking the reset button triggers the reset action", (): void => {
   gearIconButton.click();
 
   const resetButton = document.getElementById("settings-modal-reset");
-  expect(resetButton).toBeInTheDocument();
+  expect(resetButton).not.toBeNull();
   resetButton!.click();
 
   expect(resetSettings).toHaveBeenCalledTimes(1);

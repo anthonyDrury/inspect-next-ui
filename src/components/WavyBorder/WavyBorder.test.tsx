@@ -6,5 +6,5 @@ test("renders WavyBorder", (): void => {
   const { container } = render(<WavyBorder />);
   const border = getByTestId(container, "wavy-border");
 
-  expect(border).toBeInTheDocument();
+  expect(border).not.toBeNull();
 });
