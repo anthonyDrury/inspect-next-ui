@@ -1,11 +1,11 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import DatePage from "./index";
-import { initialState } from "../../../../common/constant";
+import { Location } from "../../types/location.type";
+import { mockRouter, mockFetch } from "../../test/support";
 import { Provider } from "react-redux";
-import store from "../../../../redux/store/store";
-import { mockRouter, mockFetch } from "../../../../test/support";
-import { Location } from "../../../../types/location.type";
+import store from "../../redux/store/store";
+import { initialState } from "../../common/constant";
+import DatePage from "../[cityName]/[countryName]/[date]/index.page";
 
 test("renders Date Page", () => {
   const query: Location = { cityName: "Sydney", countryName: "Australia" };
