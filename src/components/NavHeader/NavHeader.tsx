@@ -38,13 +38,12 @@ export default function NavHeader(): JSX.Element {
     <div className={classes.root}>
       <AppBar>
         <Toolbar>
-          <Typography
-            className={classes.title}
-            variant="h6"
-            noWrap
-            style={{ color: "black", textDecoration: "none" }}
-          >
-            <Link href="/">Inspect Next</Link>
+          <Typography className={classes.title} variant="h6" noWrap>
+            <Link href="/">
+              <a style={{ color: "black", textDecoration: "none" }}>
+                Inspect Next
+              </a>
+            </Link>
           </Typography>
           <div className={classes.search}>
             <CityInput />

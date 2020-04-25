@@ -3,6 +3,7 @@ import React from "react";
 import DayPreviewList from "./DayPreviewList";
 import moment from "moment";
 import { baseSettings } from "../../common/constant";
+import { mockRouter } from "../../test/support";
 
 function getProps(temp: number) {
   return {
@@ -39,6 +40,8 @@ function getProps(temp: number) {
   };
 }
 
+beforeAll((): void => mockRouter());
+
 test("renders DayPreviewList as Optimal inspection", (): void => {
   const props = getProps(60);
 
@@ -46,7 +49,7 @@ test("renders DayPreviewList as Optimal inspection", (): void => {
 
   const searchIcon = getByTestId(container, "optimal-icon");
 
-  expect(searchIcon).toBeInTheDocument();
+  expect(searchIcon).toBeVisible();
 });
 
 test("renders DayPreviewList as Viable inspection", (): void => {
@@ -56,7 +59,7 @@ test("renders DayPreviewList as Viable inspection", (): void => {
 
   const searchIcon = getByTestId(container, "viable-icon");
 
-  expect(searchIcon).toBeInTheDocument();
+  expect(searchIcon).not.toBeNull();
 });
 
 test("renders DayPreviewList as Inadvisable inspection", (): void => {
@@ -66,5 +69,5 @@ test("renders DayPreviewList as Inadvisable inspection", (): void => {
 
   const searchIcon = getByTestId(container, "inadvisable-icon");
 
-  expect(searchIcon).toBeInTheDocument();
+  expect(searchIcon).toBeVisible();
 });

@@ -22,9 +22,9 @@ test("renders InspectionVarMod", (): void => {
   const displayViableElement = getByTestId(container, "display-viable-button");
   const optimalHeadingElement = getByTestId(container, "optimal-heading");
 
-  expect(displayOptimalElement).toBeInTheDocument();
-  expect(displayViableElement).toBeInTheDocument();
-  expect(optimalHeadingElement).toBeInTheDocument();
+  expect(displayOptimalElement).not.toBeNull();
+  expect(displayViableElement).not.toBeNull();
+  expect(optimalHeadingElement).not.toBeNull();
 
   expect(queryByTestId(container, "viable-heading")).toBeNull();
 });
@@ -41,13 +41,13 @@ test("clicking the display viable button show the viable settings", (): void => 
 
   const viableHeadingElement = getByTestId(container, "viable-heading");
 
-  expect(viableHeadingElement).toBeInTheDocument();
+  expect(viableHeadingElement).not.toBeNull();
   expect(queryByTestId(container, "optimal-heading")).toBeNull();
 });
 
 test("updating optimal temp input triggers updateSettings action", (): void => {
   const updateSettings = jest.fn();
-  const { container } = render(
+  render(
     <Provider store={store}>
       <InspectionVarMod {...{ updateSettings }} />
     </Provider>

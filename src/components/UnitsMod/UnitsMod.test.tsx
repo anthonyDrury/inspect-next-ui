@@ -14,8 +14,8 @@ test("renders UnitsMod", (): void => {
   );
   const metricElement = getByTestId(container, "metric-unit");
   const imperialElement = getByTestId(container, "imperial-unit");
-  expect(metricElement).toBeInTheDocument();
-  expect(imperialElement).toBeInTheDocument();
+  expect(metricElement).not.toBeNull();
+  expect(imperialElement).not.toBeNull();
 });
 
 test("clicking metric element triggers action when imperial selected", (): void => {

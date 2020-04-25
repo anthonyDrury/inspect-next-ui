@@ -21,8 +21,10 @@ export default function Footer(): JSX.Element {
             </Typography>
           </Grid>
           <Grid item>
-            <Typography component="p" noWrap style={{ color: "black" }}>
-              <Link href="/">Home</Link>
+            <Typography component="p" noWrap>
+              <Link href="/">
+                <a style={{ color: "black" }}>Home</a>
+              </Link>
             </Typography>
           </Grid>
         </Grid>

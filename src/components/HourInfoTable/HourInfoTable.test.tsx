@@ -93,7 +93,7 @@ test("renders Hour Info Table as optimal", (): void => {
   const { container } = render(<HourInfoTable {...props} />);
   const searchIcon = getByTestId(container, "optimal-icon");
 
-  expect(searchIcon).toBeInTheDocument();
+  expect(searchIcon).toBeVisible();
 });
 
 test("renders Hour Info Table as viable", (): void => {
@@ -102,7 +102,7 @@ test("renders Hour Info Table as viable", (): void => {
   const { container } = render(<HourInfoTable {...props} />);
   const searchIcon = getByTestId(container, "viable-icon");
 
-  expect(searchIcon).toBeInTheDocument();
+  expect(searchIcon).toBeVisible();
 });
 
 test("renders Hour Info Table as inadvisable", (): void => {
@@ -111,5 +111,5 @@ test("renders Hour Info Table as inadvisable", (): void => {
   const { container } = render(<HourInfoTable {...props} />);
   const searchIcon = getByTestId(container, "viable-icon");
 
-  expect(searchIcon).toBeInTheDocument();
+  expect(searchIcon).toBeVisible();
 });

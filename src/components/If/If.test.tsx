@@ -1,6 +1,6 @@
 import React from "react";
 import If from "./If";
-import { shallow, mount } from "enzyme";
+import { shallow } from "enzyme";
 
 test("renders children when condition is true", (): void => {
   const wrapper = shallow(<If condition={true}>test</If>);
