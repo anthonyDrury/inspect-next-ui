@@ -30,8 +30,6 @@ export async function getFiveDay(
   state: State
 ): Promise<FiveDayReturnObj> {
   if (!isStateValid("fiveDay", state) && !state.loading) {
-    // store.dispatch(updateLoading(true));
-
     const response: Response = await fetch(
       `${API_URL}/fiveDay?cityName=${location.cityName}&countryName=${
         location.countryName
