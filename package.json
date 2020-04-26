@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "REACT_APP_ANALYTICS_KEY=$REACT_APP_ANALYTICS_KEY && REACT_APP_API_URL=$REACT_APP_API_URL && next build",
+    "build": "next build",
     "start": "next start",
     "test": "jest --watch",
     "CItest": "jest --ci"
