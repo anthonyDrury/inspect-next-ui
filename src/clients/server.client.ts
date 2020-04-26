@@ -24,6 +24,7 @@ export type FiveDayReturnObj =
       location: Location;
       units: Units;
     };
+
 export async function getFiveDay(
   location: Location,
   state: State

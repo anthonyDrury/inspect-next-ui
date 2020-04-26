@@ -4,12 +4,13 @@ import {
   faCheckCircle,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { State, Action } from "../../../../types/redux.types";
-import { WeatherPreviewType, WeatherMap } from "../../../../types/weather.type";
 import {
-  WeatherListItem,
-  FiveDayForecast,
-} from "../../../../types/openWeather.types";
+  State,
+  Action,
+  UpdateFiveDayPayload,
+} from "../../../../types/redux.types";
+import { WeatherPreviewType } from "../../../../types/weather.type";
+import { WeatherListItem } from "../../../../types/openWeather.types";
 import { isStateValid, getRainAmount } from "../../../../common/support";
 import { updateLocation } from "../../../../redux/actions/location.actions";
 import moment from "moment";
@@ -23,25 +24,19 @@ import { yellow } from "@material-ui/core/colors";
 import { Grid, Button, Typography } from "@material-ui/core";
 import HourInfoTable from "../../../../components/HourInfoTable/HourInfoTable";
 import { connect } from "react-redux";
-import Router from "next/dist/client/router";
 import {
   updatePageDescription,
   safeUrlString,
   mapFromUrlSafeLocation,
 } from "../../../../common/routes";
-import { Units } from "../../../../types/app.type";
 import { updateFiveDayForecast } from "../../../../redux/actions/weather.actions";
+import Link from "next/link";
+import { NextRouter, useRouter } from "next/router";
 
 interface DatePageProps {
   updateLocation?: (d: Location | undefined) => void;
-  updateFiveDay?: (
-    f: FiveDayForecast,
-    m: WeatherMap,
-    l: Location,
-    u: Units
-  ) => void;
+  updateFiveDay?: (f: UpdateFiveDayPayload) => void;
   state: State;
-  params: Location & { date: string };
 }
 type DatePageState = {
   weatherPreview?: WeatherPreviewType;
@@ -49,6 +44,8 @@ type DatePageState = {
   backRoute?: string;
 };
 function DatePage(props?: DatePageProps): JSX.Element {
+  const router: NextRouter = useRouter();
+  const query: Location & { date: string } = router.query as any;
   const [localState, setLocalState]: [DatePageState, any] = useState(
     computeLocalState()
   );
@@ -69,8 +66,6 @@ function DatePage(props?: DatePageProps): JSX.Element {
       backRoute = `/${safeUrlString(
         props?.state?.location?.cityName
       )}/${safeUrlString(props?.state?.location?.countryName)}/`;
-
-      Router.prefetch(backRoute);
     }
     return backRoute;
   }
@@ -92,9 +87,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
     setLocalState({ ...computeLocalState(), backRoute: getBackRoute() });
 
     if (props?.state !== undefined && !isStateValid("fiveDay", props.state)) {
-      const safeParams: Location | undefined = mapFromUrlSafeLocation(
-        props?.params
-      );
+      const safeParams: Location | undefined = mapFromUrlSafeLocation(query);
 
       if (props?.updateLocation !== undefined && !props.state?.loading) {
         props.updateLocation(safeParams);
@@ -102,28 +95,29 @@ function DatePage(props?: DatePageProps): JSX.Element {
           getFiveDay(safeParams, props.state).then(
             (value: FiveDayReturnObj): void => {
               if (value !== undefined && props?.updateFiveDay !== undefined) {
-                props.updateFiveDay(
-                  value.forecast,
-                  value.mappedForecast,
-                  value.location,
-                  value.units
-                );
+                props.updateFiveDay({
+                  forecast: value.forecast,
+                  mappedForecast: value.mappedForecast,
+                  location: value.location,
+                  units: value.units,
+                });
               }
             }
           );
         }
       }
     }
+
     // eslint-disable-next-line
   }, [props?.state]);
 
   function getWeatherListForDate(): WeatherListItem[] | undefined {
     if (
-      props?.params.date !== undefined &&
+      query.date !== undefined &&
       props?.state !== undefined &&
       props?.state.fiveDay !== undefined
     ) {
-      const day: string = moment(props.params.date).format("DD-MM");
+      const day: string = moment(query.date).format("DD-MM");
       const values:
         | IterableIterator<WeatherListItem>
         | undefined = props.state.fiveDay?.mappedForecast.get(day)?.values();
@@ -165,22 +159,22 @@ function DatePage(props?: DatePageProps): JSX.Element {
         }}
       >
         <Grid item xs={12} style={{ marginBottom: "0.5rem" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{
-              marginTop: "0.5rem",
-              position: "absolute",
-              left: "0.5rem",
-            }}
-            onClick={(): void => {
-              if (localState.backRoute !== undefined) {
-                Router.push(localState.backRoute);
-              }
-            }}
+          <Link
+            href={localState.backRoute ? localState.backRoute : ""}
+            passHref
           >
-            Back to week
-          </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{
+                marginTop: "0.5rem",
+                position: "absolute",
+                left: "0.5rem",
+              }}
+            >
+              Back to week
+            </Button>
+          </Link>
           <Typography variant="h3" component="h1" style={{ marginTop: "3rem" }}>
             {moment(localState.weatherPreview?.defaultWeather.dt_txt).format(
               "dddd MMMM-DD"
@@ -323,34 +317,10 @@ const mapDispatchToProps: (
   return {
     updateLocation: (d: Location | undefined): void =>
       dispatch(updateLocation(d)),
-    updateFiveDay: (
-      f: FiveDayForecast,
-      m: WeatherMap,
-      l: Location,
-      u: Units
-    ): void => dispatch(updateFiveDayForecast(f, m, l, u)),
+    updateFiveDay: (f: UpdateFiveDayPayload): void =>
+      dispatch(updateFiveDayForecast(f)),
     ...ownProps,
   };
 };
-
-// export const getStaticProps: GetStaticProps = async (context: {
-//   params?: ParsedUrlQuery | undefined;
-//   preview?: boolean | undefined;
-//   previewData?: any;
-// }): Promise<any> => {
-//   return {
-//     props: {
-//       params: context.params,
-//     },
-//   };
-// };
-
-export async function getServerSideProps(context: any): Promise<any> {
-  return {
-    props: {
-      params: context.params,
-    },
-  };
-}
 
 export default connect(mapStateToProps, mapDispatchToProps)(DatePage);

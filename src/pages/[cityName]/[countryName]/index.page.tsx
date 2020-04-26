@@ -1,32 +1,30 @@
 import React, { Dispatch, useEffect } from "react";
 import { connect } from "react-redux";
-import { State, Action } from "../../../types/redux.types";
+import {
+  State,
+  Action,
+  UpdateFiveDayPayload,
+} from "../../../types/redux.types";
 import DayPreviewList from "../../../components/DayPreviewList/DayPreviewList";
 import { updateLocation } from "../../../redux/actions/location.actions";
 import { Location } from "../../../types/location.type";
 import {
   mapFromUrlSafeLocation,
   doLocationMatch,
+  updatePageDescription,
 } from "../../../common/routes";
 import { isFiveDayValid } from "../../../common/support";
 import { Typography, Container } from "@material-ui/core";
 import { yellow } from "@material-ui/core/colors";
-import { useRouter, NextRouter } from "next/dist/client/router";
 import { getFiveDay, FiveDayReturnObj } from "../../../clients/server.client";
 import { updateFiveDayForecast } from "../../../redux/actions/weather.actions";
-import { FiveDayForecast } from "../../../types/openWeather.types";
-import { WeatherMap } from "../../../types/weather.type";
-import { Units } from "../../../types/app.type";
+import { useRouter, NextRouter } from "next/router";
 
 type LocationSetProps = {
   updateLocation?: (d: Location | undefined) => void;
-  updateFiveDay?: (
-    f: FiveDayForecast,
-    m: WeatherMap,
-    l: Location,
-    u: Units
-  ) => void;
+  updateFiveDay?: (f: UpdateFiveDayPayload) => void;
   state?: State;
+  params?: Location;
 };
 // displays the five day forecast
 function LocationSetPage(props?: LocationSetProps): JSX.Element {
@@ -34,10 +32,10 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
   const query: Location = router.query as Location;
 
   useEffect((): void => {
-    // updatePageDescription(
-    //   `${query?.cityName}, ${query?.countryName} forecast`,
-    //   `Five day forecast for ${query?.cityName}, ${query?.countryName}`
-    // );
+    updatePageDescription(
+      `${query?.cityName}, ${query?.countryName} forecast`,
+      `Five day forecast for ${query?.cityName}, ${query?.countryName}`
+    );
     if (props?.state !== undefined && !isFiveDayValid(props?.state, query)) {
       const safeParams: Location | undefined = mapFromUrlSafeLocation(query);
 
@@ -49,12 +47,12 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
           getFiveDay(safeParams, props.state).then(
             (value: FiveDayReturnObj): void => {
               if (value !== undefined && props?.updateFiveDay !== undefined) {
-                props.updateFiveDay(
-                  value.forecast,
-                  value.mappedForecast,
-                  value.location,
-                  value.units
-                );
+                props.updateFiveDay({
+                  forecast: value.forecast,
+                  mappedForecast: value.mappedForecast,
+                  location: value.location,
+                  units: value.units,
+                });
               }
             }
           );
@@ -104,12 +102,8 @@ const mapDispatchToProps: (
   return {
     updateLocation: (d: Location | undefined): void =>
       dispatch(updateLocation(d)),
-    updateFiveDay: (
-      f: FiveDayForecast,
-      m: WeatherMap,
-      l: Location,
-      u: Units
-    ): void => dispatch(updateFiveDayForecast(f, m, l, u)),
+    updateFiveDay: (f: UpdateFiveDayPayload): void =>
+      dispatch(updateFiveDayForecast(f)),
     ...ownProps,
   };
 };

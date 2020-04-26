@@ -19,6 +19,13 @@ export type FiveDayState = {
   unitsFor: Units;
 };
 
+export type UpdateFiveDayPayload = {
+  forecast: FiveDayForecast;
+  mappedForecast: WeatherMap;
+  location: Location;
+  units: Units;
+};
+
 export type Action = {
   type: AllActionTypes;
   payload?: Partial<State>;

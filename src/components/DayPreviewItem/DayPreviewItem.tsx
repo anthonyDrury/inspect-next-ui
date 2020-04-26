@@ -18,6 +18,7 @@ import { orange } from "@material-ui/core/colors";
 import { getWeatherInfo } from "../../common/weather.support";
 import { getRainAmount } from "../../common/support";
 import Router from "next/dist/client/router";
+import Link from "next/link";
 
 type DayPreviewItemState = {
   weatherPreview: WeatherPreviewType;
@@ -57,33 +58,29 @@ function DayPreviewItem(props: {
       ),
       previewRoute,
     });
-    Router.prefetch(previewRoute);
   }, [props]);
 
   return (
-    <Grid
-      style={{}}
-      container
-      className="in-day-preview-item"
-      onClick={(): void => {
-        if (localState.previewRoute !== undefined) {
-          Router.push(localState.previewRoute);
-        }
-      }}
-    >
-      <Button
-        variant="contained"
-        color="primary"
-        style={{
-          marginRight: "0.5rem",
-          marginTop: "0.25rem",
-          right: 0,
-          position: "absolute",
-          backgroundColor: orange[400],
-        }}
+    <Grid style={{}} container className="in-day-preview-item">
+      <Link
+        href={localState.previewRoute ? localState.previewRoute : ""}
+        passHref
       >
-        View Day
-      </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{
+            marginRight: "0.5rem",
+            marginTop: "0.25rem",
+            right: 0,
+            position: "absolute",
+            backgroundColor: orange[400],
+          }}
+        >
+          View Day
+        </Button>
+      </Link>
+
       <Grid item xs={4} sm={2} className="in-day-preview-item__image-container">
         <Tooltip
           title={
