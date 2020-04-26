@@ -52,7 +52,6 @@ function DatePage(props?: DatePageProps): JSX.Element {
 
   function computeLocalState(): DatePageState {
     const hourList: WeatherListItem[] | undefined = getWeatherListForDate();
-
     return {
       weatherPreview:
         hourList !== undefined ? getWeatherInfoForDate(hourList) : undefined,
