@@ -14,7 +14,6 @@ import {
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import orange from "@material-ui/core/colors/orange";
-import yellow from "@material-ui/core/colors/yellow";
 import { updatePageDescription } from "../common/routes";
 import CityInput from "../components/CityInput/CityInput";
 import WavyBorder from "../components/WavyBorder/WavyBorder";
@@ -33,7 +32,7 @@ function HomePage(): JSX.Element {
     <div className="in-home">
       <Container
         maxWidth={false}
-        style={{ backgroundColor: yellow[500], padding: "0.5rem 0" }}
+        style={{ backgroundColor: "#f4f4f4", padding: "0.5rem 0" }}
       >
         <Typography variant="h2" component="h1">
           Inspect Next
@@ -73,7 +72,7 @@ function HomePage(): JSX.Element {
       <WavyBorder></WavyBorder>
       <Container
         maxWidth={false}
-        style={{ backgroundColor: yellow[500], paddingBottom: "0.5rem" }}
+        style={{ backgroundColor: "#f4f4f4", paddingBottom: "0.5rem" }}
       >
         <Typography variant="h4" component="h3">
           Easily determine which days will have the best conditions.
@@ -82,7 +81,7 @@ function HomePage(): JSX.Element {
         <Card
           style={{
             display: "inline-block",
-            backgroundColor: yellow[600],
+            backgroundColor: "#D8D8D8",
             marginTop: "0.5rem",
           }}
         >
@@ -151,7 +150,7 @@ function HomePage(): JSX.Element {
       />
       <Container
         maxWidth={false}
-        style={{ backgroundColor: yellow[500], padding: "0.5rem 0" }}
+        style={{ backgroundColor: "#f4f4f4", padding: "0.5rem 0" }}
       >
         <Typography variant="h5" component="h5">
           Customizable, so you have full control.
@@ -160,7 +159,7 @@ function HomePage(): JSX.Element {
         <Card
           style={{
             display: "inline-block",
-            backgroundColor: yellow[600],
+            backgroundColor: "#D8D8D8",
             marginTop: "0.5rem",
           }}
         >

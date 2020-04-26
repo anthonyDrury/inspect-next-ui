@@ -1,4 +1,4 @@
-import { yellow, orange } from "@material-ui/core/colors";
+import { orange } from "@material-ui/core/colors";
 import React from "react";
 
 export default function WavyBorder(): JSX.Element {
@@ -6,7 +6,7 @@ export default function WavyBorder(): JSX.Element {
     <div
       data-testid="wavy-border"
       style={{
-        backgroundColor: yellow[500],
+        backgroundColor: "#f4f4f4",
         position: "relative",
         width: "100%",
         paddingBottom: "20%",
