@@ -20,7 +20,6 @@ import {
 } from "../../../../clients/server.client";
 import { getWeatherInfo } from "../../../../common/weather.support";
 import { Location } from "../../../../types/location.type";
-import { yellow } from "@material-ui/core/colors";
 import { Grid, Button, Typography } from "@material-ui/core";
 import HourInfoTable from "../../../../components/HourInfoTable/HourInfoTable";
 import { connect } from "react-redux";
@@ -147,7 +146,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
   return (
     <div
       style={{
-        backgroundColor: yellow[500],
+        backgroundColor: "#f4f4f4",
       }}
     >
       <Grid
@@ -196,6 +195,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
           sm={4}
           style={{
             borderTop: " 1px solid black",
+            backgroundColor: "#d8d8dd",
           }}
         >
           <Typography variant="h6" component="p">
@@ -218,7 +218,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
           direction="column"
           xs={6}
           sm={2}
-          style={{ borderTop: " 1px solid black" }}
+          style={{ borderTop: " 1px solid black", backgroundColor: "#d8d8dd" }}
         >
           <Typography variant="h6" component="p">
             {localState?.weatherPreview?.viableTypes.isOptimal
@@ -264,6 +264,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
             borderTop: " 1px solid black",
             textAlign: "left",
             lineHeight: 0,
+            backgroundColor: "#d8d8dd",
           }}
         >
           <p className="in-text--large in-date-view-item__infoText">
