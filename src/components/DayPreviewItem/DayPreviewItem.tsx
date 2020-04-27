@@ -25,7 +25,7 @@ import {
 import { Units } from "../../types/app.type";
 import { orange } from "@material-ui/core/colors";
 import { getWeatherInfo } from "../../common/weather.support";
-import { getRainAmount } from "../../common/support";
+import { getRainAmount, getWindSpeed } from "../../common/support";
 import Router from "next/dist/client/router";
 import Link from "next/link";
 
@@ -90,6 +90,7 @@ function DayPreviewItem(props: {
           arrow
         >
           <img
+            className="in-day-preview-item__weather-image"
             src={`/weatherIcons/${localState.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
               "n",
               "d"
@@ -147,7 +148,7 @@ function DayPreviewItem(props: {
           ).format("YYYY-MMM-DD")}
           arrow
         >
-          <div>
+          <div className="in-day-preview-item__date-container">
             <Typography variant="h5" component="p">
               {moment(localState.weatherPreview?.defaultWeather.dt_txt).format(
                 "dddd"
@@ -180,19 +181,22 @@ function DayPreviewItem(props: {
             </Button>
           </Link>
 
-          <span
-            style={{
-              backgroundColor: "#d8d8dd",
-              padding: "0 0.5rem",
-              borderRadius: "2rem",
-              marginTop: "1rem",
-            }}
-          >
-            <FontAwesomeIcon
-              size="3x"
-              icon={localState.expanded ? faAngleUp : faAngleDown}
-            />
-          </span>
+          <Tooltip title="expand" arrow>
+            <span
+              style={{
+                backgroundColor: "#d8d8dd",
+                padding: "0 0.5rem",
+                borderRadius: "2rem",
+                marginTop: "1rem",
+                border: "solid 1px #808080",
+              }}
+            >
+              <FontAwesomeIcon
+                size="3x"
+                icon={localState.expanded ? faAngleUp : faAngleDown}
+              />
+            </span>
+          </Tooltip>
         </div>
       </ExpansionPanelSummary>
 
@@ -214,7 +218,7 @@ function DayPreviewItem(props: {
           </Typography>
         </div>
 
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
           {!localState.weatherPreview?.isViable &&
           (localState.weatherPreview?.nineAM !== undefined ||
             localState.weatherPreview?.threePM !== undefined) ? (
@@ -231,9 +235,10 @@ function DayPreviewItem(props: {
                   <p>{`${localState.weatherPreview?.nineAM!.main.temp}° ${
                     props.units === "Imperial" ? "F" : "C"
                   }`}</p>
-                  <p>{`${localState.weatherPreview?.nineAM?.wind.speed} ${
-                    props.units === "Imperial" ? "MPH" : "M/S"
-                  }`}</p>
+                  <p>{`${getWindSpeed(
+                    localState.weatherPreview?.nineAM?.wind.speed,
+                    props.units
+                  )} ${props.units === "Imperial" ? "MPH" : "KM/H"}`}</p>
                   <p>{`${localState.weatherPreview?.nineAM?.main.humidity}%`}</p>
                 </div>
               </If>
@@ -243,9 +248,10 @@ function DayPreviewItem(props: {
                   <p>{`${localState.weatherPreview?.threePM!.main.temp}° ${
                     props.units === "Imperial" ? "F" : "C"
                   }`}</p>
-                  <p>{`${localState.weatherPreview?.threePM?.wind.speed} ${
-                    props.units === "Imperial" ? "MPH" : "M/S"
-                  }`}</p>
+                  <p>{`${getWindSpeed(
+                    localState.weatherPreview?.threePM?.wind.speed,
+                    props.units
+                  )} ${props.units === "Imperial" ? "MPH" : "KM/H"}`}</p>
                   <p>{`${localState.weatherPreview?.threePM?.main.humidity}%`}</p>
                 </div>
               </If>
@@ -258,36 +264,41 @@ function DayPreviewItem(props: {
               ].map(
                 (time: WeatherValidity, index: number): JSX.Element => {
                   return (
-                    <If condition={index < 2} key={index}>
-                      <div className="in-day-preview-item__preview-container">
-                        <p
-                          className="in-text--strong"
-                          style={{
-                            color: time.isOptimal
-                              ? "green"
-                              : time.isViable
-                              ? "black"
-                              : "red",
-                          }}
-                        >
-                          {time.isOptimal ? "Optimal" : "Viable"}
-                        </p>
-                        <p>temp:</p>
-                        <p>wind:</p>
-                        <p>humidity:</p>
-                      </div>
+                    <>
+                      <If condition={index < 2} key={index}>
+                        <div className="in-day-preview-item__preview-container">
+                          <p
+                            className="in-text--strong"
+                            style={{
+                              color: time.isOptimal
+                                ? "green"
+                                : time.isViable
+                                ? "black"
+                                : "red",
+                            }}
+                          >
+                            {time.isOptimal ? "Optimal" : "Viable"}
+                          </p>
+                          <p>temp:</p>
+                          <p>wind:</p>
+                          <p>humidity:</p>
+                        </div>
 
-                      <div className="in-day-preview-item__preview-container">
-                        <p>{moment(time.weather.dt_txt).format("h A")}</p>
-                        <p>{`${time.weather.main.temp}° ${
-                          props.units === "Imperial" ? "F" : "C"
-                        }`}</p>
-                        <p>{`${time.weather.wind.speed} ${
-                          props.units === "Imperial" ? "MPH" : "M/S"
-                        }`}</p>
-                        <p>{`${time.weather.main.humidity}%`}</p>
-                      </div>
-                    </If>
+                        <div className="in-day-preview-item__preview-container">
+                          <p>{moment(time.weather.dt_txt).format("h A")}</p>
+                          <p>{`${time.weather.main.temp}° ${
+                            props.units === "Imperial" ? "F" : "C"
+                          }`}</p>
+                          <p>{`${getWindSpeed(
+                            time.weather.wind.speed,
+                            props.units
+                          )} ${
+                            props.units === "Imperial" ? "MPH" : "KM/H"
+                          }`}</p>
+                          <p>{`${time.weather.main.humidity}%`}</p>
+                        </div>
+                      </If>
+                    </>
                   );
                 }
               )}
@@ -296,33 +307,6 @@ function DayPreviewItem(props: {
         </div>
       </ExpansionPanelDetails>
     </ExpansionPanel>
-
-    // <Grid container className="in-day-preview-item">
-
-    //   <Grid
-    //     item
-    //     container
-    //     direction="column"
-    //     alignContent="center"
-    //     justify="center"
-    //     xs={8}
-    //     sm={4}
-    //   >
-    //
-    //   </Grid>
-
-    //   <Grid
-    //     item
-    //     container
-    //     direction="row"
-    //     justify="center"
-    //     alignItems="center"
-    //     xs={12}
-    //     sm={6}
-    //   >
-
-    //   </Grid>
-    // </Grid>
   );
 }
 

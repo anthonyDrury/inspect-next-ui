@@ -82,12 +82,19 @@ function milesHourToMetreSec(wind: number): number {
   return Number((wind / 2.237).toFixed(2));
 }
 
-function millimetesrToInches(rainMM: number): number {
+function millimetersToInches(rainMM: number): number {
   return Number((rainMM / 25.4).toFixed(2));
+}
+
+function metreSecToKilometreHour(windSpeed: number): number {
+  return Number((windSpeed * 3.6).toFixed(2));
 }
 
 export function inchesToMillimeters(rainInch: number): number {
   return Number((rainInch * 25.4).toFixed(2));
+}
+export function kilometreHourToMetreSec(windSpeed: number): number {
+  return Number((windSpeed / 3.6).toFixed(2));
 }
 
 export function getRainAmount(
@@ -97,7 +104,18 @@ export function getRainAmount(
   return rainMM !== undefined
     ? units === "Metric"
       ? rainMM
-      : millimetesrToInches(rainMM)
+      : millimetersToInches(rainMM)
+    : 0;
+}
+
+export function getWindSpeed(
+  windSpeed: number | undefined,
+  units: Units
+): number {
+  return windSpeed !== undefined
+    ? units === "Metric"
+      ? windSpeed
+      : metreSecToKilometreHour(windSpeed)
     : 0;
 }
 
