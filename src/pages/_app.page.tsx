@@ -24,6 +24,7 @@ import "../styles/SettingsModal.scss";
 import "../styles/Typography.scss";
 import { Settings } from "../types/app.type";
 import { updateSettings } from "../redux/actions/settings.actions";
+import ErrorBoundary from "../components/ErrorBoundary/ErrorBoundary";
 
 const MyApp = (props: {
   Component: any;
@@ -58,16 +59,18 @@ const MyApp = (props: {
     },
   });
   return (
-    <Provider store={store}>
-      <div className="in-app">
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <NavHeader />
-          <Component {...pageProps} />
-          <Footer />
-        </ThemeProvider>
-      </div>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <div className="in-app">
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <NavHeader />
+            <Component {...pageProps} />
+            <Footer />
+          </ThemeProvider>
+        </div>
+      </Provider>
+    </ErrorBoundary>
   );
 };
 

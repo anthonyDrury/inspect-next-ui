@@ -1,5 +1,6 @@
 import ReactGA from "react-ga";
 import { isDefined } from "./support";
+import { ErrorInfo } from "react";
 
 // Google analytics functions
 // Needs to test for window as can be run without browser (test env)
@@ -25,5 +26,13 @@ export function initGA(): void {
 export function PageView(): void {
   if (isNotTestEnv()) {
     ReactGA.pageview(window.location.pathname + window.location.search);
+  }
+}
+
+export function SendError(error: Error, errorInfo: ErrorInfo): void {
+  if (isNotTestEnv()) {
+    ReactGA.exception({
+      description: error.message,
+    });
   }
 }
