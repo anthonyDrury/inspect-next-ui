@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Store } from "redux";
 import withRedux from "next-redux-wrapper";
 import { State, Action } from "../types/redux.types";
-import { configureStore } from "../redux/store/store";
+import { configureStore, getSettingsFromStorage } from "../redux/store/store";
 import {
   ThemeProvider,
   CssBaseline,
@@ -15,7 +15,6 @@ import Footer from "../components/Footer/Footer";
 import { initGA, PageView } from "../common/analytics";
 import { orange, yellow } from "@material-ui/core/colors";
 import Router from "next/dist/client/router";
-import "../styles/App.scss";
 import "../styles/DayPreviewItem.scss";
 import "../styles/DayPreviewList.css";
 import "../styles/Footer.scss";
@@ -23,6 +22,8 @@ import "../styles/HourInfoTable.scss";
 import "../styles/LocationNotFound.scss";
 import "../styles/SettingsModal.scss";
 import "../styles/Typography.scss";
+import { Settings } from "../types/app.type";
+import { updateSettings } from "../redux/actions/settings.actions";
 
 const MyApp = (props: {
   Component: any;
@@ -30,7 +31,20 @@ const MyApp = (props: {
   store: Store<State, Action>;
 }): JSX.Element => {
   const { Component, pageProps, store } = props;
+
   useEffect((): void => {
+    const settings: Settings | undefined = getSettingsFromStorage();
+    if (settings !== undefined) {
+      store.dispatch(updateSettings(settings));
+    }
+    store.subscribe((): void => {
+      if (localStorage !== undefined) {
+        localStorage.setItem(
+          "inspectNextState",
+          JSON.stringify({ settings: store.getState().settings })
+        );
+      }
+    });
     initGA();
     PageView();
     Router.events.on("routeChangeComplete", (): void => {
