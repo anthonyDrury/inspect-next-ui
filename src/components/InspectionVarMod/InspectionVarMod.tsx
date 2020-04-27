@@ -16,6 +16,8 @@ import {
   getRainAmount,
   inchesToMillimeters,
   isDefined,
+  getWindSpeed,
+  kilometreHourToMetreSec,
 } from "../../common/support";
 
 type InspectionVarModState = {
@@ -163,13 +165,24 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               id="optimal-wind-max"
               label="Maximum optimal wind"
               style={{ maxWidth: "15rem" }}
-              value={props?.state?.settings.inspectionWeatherVars.optWindMax}
+              value={getWindSpeed(
+                props?.state?.settings.inspectionWeatherVars.optWindMax,
+                props?.state!.settings.units
+              )}
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
               ): void | "" => {
                 if (isDefined(e.target.value)) {
-                  updateWeatherVars({ optWindMax: Number(e.target.value) });
+                  if (props?.state!.settings.units === "Metric") {
+                    updateWeatherVars({ optWindMax: Number(e.target.value) });
+                  } else {
+                    updateWeatherVars({
+                      optWindMax: kilometreHourToMetreSec(
+                        Number(e.target.value)
+                      ),
+                    });
+                  }
                 }
               }}
               InputProps={{
@@ -177,7 +190,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
                   <InputAdornment position="end">
                     {props?.state?.settings.units === "Imperial"
                       ? "MPH"
-                      : "metre/sec"}
+                      : "KM/H"}
                   </InputAdornment>
                 ),
               }}
@@ -283,13 +296,24 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               id="viable-wind-max"
               label="Maximum viable wind"
               style={{ maxWidth: "15rem" }}
-              value={props?.state?.settings.inspectionWeatherVars.viaWindMax}
+              value={getWindSpeed(
+                props?.state?.settings.inspectionWeatherVars.viaWindMax,
+                props?.state!.settings.units
+              )}
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
               ): void | "" => {
                 if (isDefined(e.target.value)) {
-                  updateWeatherVars({ viaWindMax: Number(e.target.value) });
+                  if (props?.state!.settings.units === "Metric") {
+                    updateWeatherVars({ viaWindMax: Number(e.target.value) });
+                  } else {
+                    updateWeatherVars({
+                      viaWindMax: kilometreHourToMetreSec(
+                        Number(e.target.value)
+                      ),
+                    });
+                  }
                 }
               }}
               InputProps={{
@@ -297,7 +321,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
                   <InputAdornment position="end">
                     {props?.state?.settings.units === "Imperial"
                       ? "MPH"
-                      : "metre/sec"}
+                      : "KM/H"}
                   </InputAdornment>
                 ),
               }}
