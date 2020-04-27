@@ -15,7 +15,6 @@ import {
 } from "../../../common/routes";
 import { isFiveDayValid } from "../../../common/support";
 import { Typography, Container } from "@material-ui/core";
-import { yellow } from "@material-ui/core/colors";
 import { getFiveDay, FiveDayReturnObj } from "../../../clients/server.client";
 import { updateFiveDayForecast } from "../../../redux/actions/weather.actions";
 import { useRouter, NextRouter } from "next/router";
@@ -63,7 +62,7 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
 
   return (
     <div className="in-location">
-      <Container maxWidth={false} style={{ backgroundColor: yellow[500] }}>
+      <Container maxWidth={false} style={{ backgroundColor: "#f4f4f4" }}>
         <Typography variant="h3" component="h1">
           Forecast for
           <br />
