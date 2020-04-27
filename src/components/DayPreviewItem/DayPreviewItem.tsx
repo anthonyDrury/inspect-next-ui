@@ -63,6 +63,7 @@ function DayPreviewItem(props: {
       "YYYY-MM-DD"
     )}`;
     setLocalState({
+      ...localState,
       weatherPreview: getWeatherInfo(
         props.hourList,
         props.weatherVars,
@@ -71,7 +72,6 @@ function DayPreviewItem(props: {
         props.sunsetTime
       ),
       previewRoute,
-      expanded: localState.expanded,
     });
   }, [props]);
 
