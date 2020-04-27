@@ -31,6 +31,7 @@ import {
 import { updateFiveDayForecast } from "../../../../redux/actions/weather.actions";
 import Link from "next/link";
 import { NextRouter, useRouter } from "next/router";
+import SpinnerFallback from "../../../../components/SpinnerFallback/SpinnerFallback";
 
 interface DatePageProps {
   updateLocation?: (d: Location | undefined) => void;
@@ -183,121 +184,128 @@ function DatePage(props?: DatePageProps): JSX.Element {
             {props?.state?.location?.countryName}
           </Typography>
         </Grid>
+        <SpinnerFallback condition={localState.weatherPreview !== undefined}>
+          <Grid
+            container
+            alignContent="center"
+            alignItems="center"
+            justify="flex-start"
+            direction="column"
+            item
+            xs={6}
+            sm={4}
+            style={{
+              borderTop: " 1px solid black",
+              backgroundColor: "#d8d8dd",
+            }}
+          >
+            <Typography variant="h6" component="p">
+              {
+                localState?.weatherPreview?.defaultWeather.weather[0]
+                  .description
+              }
+            </Typography>
+            <img
+              src={`/weatherIcons/${localState.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
+                "n",
+                "d"
+              )}@2x.png`}
+              alt="weather icon"
+            ></img>
+          </Grid>
+          <Grid
+            item
+            container
+            alignContent="center"
+            alignItems="center"
+            justify="space-between"
+            direction="column"
+            xs={6}
+            sm={2}
+            style={{
+              borderTop: " 1px solid black",
+              backgroundColor: "#d8d8dd",
+            }}
+          >
+            <Typography variant="h6" component="p">
+              {localState?.weatherPreview?.viableTypes.isOptimal
+                ? "Optimal"
+                : localState?.weatherPreview?.viableTypes.isViable
+                ? "Viable"
+                : "Inadvisable"}
+            </Typography>
+            {localState?.weatherPreview?.viableTypes.isViable ||
+            localState?.weatherPreview?.viableTypes.isOptimal ? (
+              <>
+                <FontAwesomeIcon
+                  size="3x"
+                  color={
+                    localState?.weatherPreview?.viableTypes.isOptimal
+                      ? "green"
+                      : "black"
+                  }
+                  icon={faCheckCircle}
+                />
+              </>
+            ) : (
+              <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
+            )}
+            <Typography component="p">
+              {localState.weatherPreview?.viableTypes !== undefined &&
+              !localState?.weatherPreview?.viableTypes.isOptimal
+                ? localState.weatherPreview!.viableTypes.reason
+                : null}
+            </Typography>
+          </Grid>
 
-        <Grid
-          container
-          alignContent="center"
-          alignItems="center"
-          justify="flex-start"
-          direction="column"
-          item
-          xs={6}
-          sm={4}
-          style={{
-            borderTop: " 1px solid black",
-            backgroundColor: "#d8d8dd",
-          }}
-        >
-          <Typography variant="h6" component="p">
-            {localState?.weatherPreview?.defaultWeather.weather[0].description}
-          </Typography>
-          <img
-            src={`/weatherIcons/${localState.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
-              "n",
-              "d"
-            )}@2x.png`}
-            alt="weather icon"
-          ></img>
-        </Grid>
-        <Grid
-          item
-          container
-          alignContent="center"
-          alignItems="center"
-          justify="space-between"
-          direction="column"
-          xs={6}
-          sm={2}
-          style={{ borderTop: " 1px solid black", backgroundColor: "#d8d8dd" }}
-        >
-          <Typography variant="h6" component="p">
-            {localState?.weatherPreview?.viableTypes.isOptimal
-              ? "Optimal"
-              : localState?.weatherPreview?.viableTypes.isViable
-              ? "Viable"
-              : "Inadvisable"}
-          </Typography>
-          {localState?.weatherPreview?.viableTypes.isViable ||
-          localState?.weatherPreview?.viableTypes.isOptimal ? (
-            <>
-              <FontAwesomeIcon
-                size="3x"
-                color={
-                  localState?.weatherPreview?.viableTypes.isOptimal
-                    ? "green"
-                    : "black"
-                }
-                icon={faCheckCircle}
+          <Grid
+            item
+            container
+            alignContent="center"
+            alignItems="center"
+            justify="center"
+            direction="column"
+            xs={12}
+            sm={6}
+            style={{
+              borderTop: " 1px solid black",
+              textAlign: "left",
+              lineHeight: 0,
+              backgroundColor: "#d8d8dd",
+            }}
+          >
+            <p className="in-text--large in-date-view-item__infoText">
+              {localState?.weatherPreview?.minTemp}° -{" "}
+              {localState?.weatherPreview?.maxTemp}°
+            </p>
+            <p className="in-text--large in-date-view-item__infoText">
+              wind: {localState?.weatherPreview?.minWind} -{" "}
+              {localState?.weatherPreview?.minWind}
+            </p>
+            <p className="in-date-view-item__infoText">
+              rain:{" "}
+              {`${getRainAmount(
+                localState.weatherPreview?.rainAmount,
+                props?.state?.settings.units!
+              )}${props?.state?.settings.units === "Imperial" ? "in" : "mm"}`}
+            </p>
+            <p className="in-date-view-item__infoText">
+              snow:{" "}
+              {`${getRainAmount(
+                localState.weatherPreview?.snowAmount,
+                props?.state?.settings.units!
+              )}${props?.state?.settings.units === "Imperial" ? "in" : "mm"}`}
+            </p>
+          </Grid>
+          <Grid item xs={12}>
+            {localState.weatherPreview !== undefined ? (
+              <HourInfoTable
+                weatherPreview={localState.weatherPreview!.viableTypes}
+                units={props?.state?.settings.units}
               />
-            </>
-          ) : (
-            <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
-          )}
-          <Typography component="p">
-            {localState.weatherPreview?.viableTypes !== undefined &&
-            !localState?.weatherPreview?.viableTypes.isOptimal
-              ? localState.weatherPreview!.viableTypes.reason
-              : null}
-          </Typography>
-        </Grid>
-
-        <Grid
-          item
-          container
-          alignContent="center"
-          alignItems="center"
-          justify="center"
-          direction="column"
-          xs={12}
-          sm={6}
-          style={{
-            borderTop: " 1px solid black",
-            textAlign: "left",
-            lineHeight: 0,
-            backgroundColor: "#d8d8dd",
-          }}
-        >
-          <p className="in-text--large in-date-view-item__infoText">
-            {localState?.weatherPreview?.minTemp}° -{" "}
-            {localState?.weatherPreview?.maxTemp}°
-          </p>
-          <p className="in-text--large in-date-view-item__infoText">
-            wind: {localState?.weatherPreview?.minWind} -{" "}
-            {localState?.weatherPreview?.minWind}
-          </p>
-          <p className="in-date-view-item__infoText">
-            rain:{" "}
-            {`${getRainAmount(
-              localState.weatherPreview?.rainAmount,
-              props?.state?.settings.units!
-            )}${props?.state?.settings.units === "Imperial" ? "in" : "mm"}`}
-          </p>
-          <p className="in-date-view-item__infoText">
-            snow:{" "}
-            {`${getRainAmount(
-              localState.weatherPreview?.snowAmount,
-              props?.state?.settings.units!
-            )}${props?.state?.settings.units === "Imperial" ? "in" : "mm"}`}
-          </p>
-        </Grid>
-        <Grid item xs={12}>
-          {localState.weatherPreview !== undefined ? (
-            <HourInfoTable
-              weatherPreview={localState.weatherPreview!.viableTypes}
-              units={props?.state?.settings.units}
-            />
-          ) : null}
-        </Grid>
+            ) : null}
+          </Grid>
+        </SpinnerFallback>
       </Grid>
     </div>
   );
