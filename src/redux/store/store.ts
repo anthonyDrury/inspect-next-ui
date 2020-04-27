@@ -18,11 +18,11 @@ export function getSettingsFromStorage(): Settings | undefined {
     localStorage !== undefined
       ? localStorage.getItem("inspectNextState")
       : null;
-  const { settings }: { settings: Settings } = JSON.parse(storageItem!) as {
+  const state: { settings: Settings } | null = JSON.parse(storageItem!) as {
     settings: Settings;
   };
 
-  return settings ? settings : undefined;
+  return state ? state.settings : undefined;
 }
 
 export function configureStore(state: State = initialState): Store {
