@@ -11,7 +11,11 @@ import {
 } from "../../../../types/redux.types";
 import { WeatherPreviewType } from "../../../../types/weather.type";
 import { WeatherListItem } from "../../../../types/openWeather.types";
-import { isStateValid, getRainAmount } from "../../../../common/support";
+import {
+  isStateValid,
+  getRainAmount,
+  getWindSpeed,
+} from "../../../../common/support";
 import { updateLocation } from "../../../../redux/actions/location.actions";
 import moment from "moment";
 import {
@@ -279,8 +283,17 @@ function DatePage(props?: DatePageProps): JSX.Element {
               {localState?.weatherPreview?.maxTemp}°
             </p>
             <p className="in-text--large in-date-view-item__infoText">
-              wind: {localState?.weatherPreview?.minWind} -{" "}
-              {localState?.weatherPreview?.minWind}
+              wind (
+              {props?.state.settings!.units === "Imperial" ? "MPH" : "KM/H"}) :{" "}
+              {getWindSpeed(
+                localState?.weatherPreview?.minWind,
+                props?.state.settings!.units
+              )}{" "}
+              -{" "}
+              {getWindSpeed(
+                localState?.weatherPreview?.minWind,
+                props?.state.settings!.units
+              )}
             </p>
             <p className="in-date-view-item__infoText">
               rain:{" "}

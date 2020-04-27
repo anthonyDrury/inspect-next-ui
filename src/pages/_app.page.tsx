@@ -15,6 +15,7 @@ import Footer from "../components/Footer/Footer";
 import { initGA, PageView } from "../common/analytics";
 import { orange, yellow } from "@material-ui/core/colors";
 import Router from "next/dist/client/router";
+import "../styles/App.scss";
 import "../styles/DayPreviewItem.scss";
 import "../styles/DayPreviewList.css";
 import "../styles/Footer.scss";

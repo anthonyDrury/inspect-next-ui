@@ -8,7 +8,7 @@ import {
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { WeatherValidity, ViableWeather } from "../../types/weather.type";
-import { getRainAmount } from "../../common/support";
+import { getRainAmount, getWindSpeed } from "../../common/support";
 
 type HourInfoProps = {
   weatherPreview: ViableWeather | undefined;
@@ -83,8 +83,8 @@ function HourInfoTable(props?: HourInfoProps): JSX.Element {
           {props?.units === "Imperial" ? "in" : "mm"}
         </Grid>
         <Grid item xs={3} className="in-hour-table__row-item">
-          {weatherItem.weather.wind.speed}{" "}
-          {props?.units === "Imperial" ? "MPH" : "m/s"}
+          {getWindSpeed(weatherItem.weather.wind.speed, props?.units!)}
+          {props?.units === "Imperial" ? "MPH" : "KM/h"}
         </Grid>
         <Grid item xs={2} className="in-hour-table__row-item">
           {weatherItem.weather.snow !== undefined
