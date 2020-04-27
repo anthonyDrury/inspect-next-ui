@@ -18,6 +18,7 @@ import { Typography, Container } from "@material-ui/core";
 import { getFiveDay, FiveDayReturnObj } from "../../../clients/server.client";
 import { updateFiveDayForecast } from "../../../redux/actions/weather.actions";
 import { useRouter, NextRouter } from "next/router";
+import SpinnerFallback from "../../../components/SpinnerFallback/SpinnerFallback";
 
 type LocationSetProps = {
   updateLocation?: (d: Location | undefined) => void;
@@ -66,19 +67,20 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
         <Typography variant="h3" component="h1">
           Forecast for
           <br />
-          {props?.state?.fiveDay?.locationFor?.cityName},{" "}
-          {props?.state?.fiveDay?.locationFor?.countryName}
+          {query?.cityName}, {query?.countryName}
         </Typography>
-        {props?.state?.fiveDay !== undefined ? (
-          <DayPreviewList
-            weatherMap={props!.state!.fiveDay?.mappedForecast}
-            weatherConditions={props!.state!.settings.inspectionWeatherVars}
-            utcOffset={props!.state!.fiveDay!.forecast.city.timezone}
-            sunsetTime={props!.state!.fiveDay!.forecast.city.sunset}
-            sunriseTime={props!.state!.fiveDay!.forecast.city.sunrise}
-            units={props!.state!.settings.units}
-          ></DayPreviewList>
-        ) : null}
+        <SpinnerFallback condition={props?.state?.fiveDay !== undefined}>
+          {props?.state?.fiveDay !== undefined ? (
+            <DayPreviewList
+              weatherMap={props!.state!.fiveDay?.mappedForecast}
+              weatherConditions={props!.state!.settings.inspectionWeatherVars}
+              utcOffset={props!.state!.fiveDay!.forecast.city.timezone}
+              sunsetTime={props!.state!.fiveDay!.forecast.city.sunset}
+              sunriseTime={props!.state!.fiveDay!.forecast.city.sunrise}
+              units={props!.state!.settings.units}
+            ></DayPreviewList>
+          ) : null}
+        </SpinnerFallback>
       </Container>
     </div>
   );
