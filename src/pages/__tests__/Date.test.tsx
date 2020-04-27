@@ -13,14 +13,7 @@ test("renders Date Page", () => {
   mockFetch();
   const { getByText } = render(
     <Provider store={store}>
-      <DatePage
-        params={{
-          cityName: "sydney",
-          countryName: "australia",
-          date: "April-12-20",
-        }}
-        state={initialState}
-      />
+      <DatePage state={initialState} />
     </Provider>
   );
   const backElement = getByText(/Back to week/i);
