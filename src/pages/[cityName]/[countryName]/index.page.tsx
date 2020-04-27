@@ -109,17 +109,4 @@ const mapDispatchToProps: (
   };
 };
 
-export async function getStaticProps(context: any): Promise<any> {
-  debugger;
-  console.table(context);
-  return { props: {} };
-}
-
-export async function getStaticPaths(): Promise<any> {
-  return {
-    paths: [{ params: { cityName: "Sydney", countryName: "Australia" } }],
-    fallback: true,
-  };
-}
-
 export default connect(mapStateToProps, mapDispatchToProps)(LocationSetPage);
