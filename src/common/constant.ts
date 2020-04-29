@@ -12,7 +12,7 @@ const baseWeatherConditions: WeatherInspectionVariables = {
 
   // Rain Conditions, mm/3hr
   optRainMax: 0,
-  viaRainMax: 7.5,
+  viaRainMax: 5,
 
   // Wind Conditions, in m/s
   optWindMax: 2.25,

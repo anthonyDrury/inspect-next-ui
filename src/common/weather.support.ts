@@ -181,30 +181,6 @@ function getIsWeatherValid(weatherReason: WeatherReasonObj): boolean {
     !weatherReason.isTooWindy
   );
 }
-
-function getReason(
-  weatherReason: WeatherReasonObj,
-  valid: boolean
-): WeatherReason {
-  if (!weatherReason.isDaylight) {
-    return "Too dark";
-  }
-  if (weatherReason.isTooCold) {
-    return valid ? "A bit cold" : "Too cold";
-  }
-  if (weatherReason.isTooHot) {
-    return valid ? "A bit hot" : "Too hot";
-  }
-
-  if (weatherReason.isTooWet) {
-    return valid ? "A bit wet" : "Too wet";
-  }
-  if (weatherReason.isTooWindy) {
-    return valid ? "A bit windy" : "Too windy";
-  }
-  return "Optimal";
-}
-
 function getViableWeatherSlots(
   weatherList: WeatherListItem[],
   weatherVars: WeatherInspectionVariables,
@@ -240,14 +216,16 @@ function getViableWeatherSlots(
         weather: listItem,
         isOptimal: true,
         isViable: true,
-        reason: getReason(
-          isWeatherOptimal(
-            listItem,
-            weatherVars,
-            utcOffset,
-            sunriseTime,
-            sunsetTime
-          ),
+        reason: getMainReasonForDay(
+          [
+            isWeatherOptimal(
+              listItem,
+              weatherVars,
+              utcOffset,
+              sunriseTime,
+              sunsetTime
+            ),
+          ],
           true
         ),
       });
@@ -255,14 +233,16 @@ function getViableWeatherSlots(
         weather: listItem,
         isOptimal: true,
         isViable: true,
-        reason: getReason(
-          isWeatherOptimal(
-            listItem,
-            weatherVars,
-            utcOffset,
-            sunriseTime,
-            sunsetTime
-          ),
+        reason: getMainReasonForDay(
+          [
+            isWeatherOptimal(
+              listItem,
+              weatherVars,
+              utcOffset,
+              sunriseTime,
+              sunsetTime
+            ),
+          ],
           true
         ),
       });
@@ -272,14 +252,16 @@ function getViableWeatherSlots(
         weather: listItem,
         isOptimal: false,
         isViable: true,
-        reason: getReason(
-          isWeatherOptimal(
-            listItem,
-            weatherVars,
-            utcOffset,
-            sunriseTime,
-            sunsetTime
-          ),
+        reason: getMainReasonForDay(
+          [
+            isWeatherOptimal(
+              listItem,
+              weatherVars,
+              utcOffset,
+              sunriseTime,
+              sunsetTime
+            ),
+          ],
           true
         ),
       });
@@ -287,14 +269,16 @@ function getViableWeatherSlots(
         weather: listItem,
         isOptimal: false,
         isViable: true,
-        reason: getReason(
-          isWeatherOptimal(
-            listItem,
-            weatherVars,
-            utcOffset,
-            sunriseTime,
-            sunsetTime
-          ),
+        reason: getMainReasonForDay(
+          [
+            isWeatherOptimal(
+              listItem,
+              weatherVars,
+              utcOffset,
+              sunriseTime,
+              sunsetTime
+            ),
+          ],
           true
         ),
       });
@@ -304,14 +288,16 @@ function getViableWeatherSlots(
         weather: listItem,
         isOptimal: false,
         isViable: false,
-        reason: getReason(
-          isWeatherOptimal(
-            listItem,
-            weatherVars,
-            utcOffset,
-            sunriseTime,
-            sunsetTime
-          ),
+        reason: getMainReasonForDay(
+          [
+            isWeatherOptimal(
+              listItem,
+              weatherVars,
+              utcOffset,
+              sunriseTime,
+              sunsetTime
+            ),
+          ],
           false
         ),
       });
@@ -355,17 +341,38 @@ function getMainReasonForDay(
     }
   });
 
-  if (tooCold > tooHot && tooCold > tooWet && tooCold > tooWindy) {
+  const weatherArr: [string, number][] = [
+    ["wet", tooWet],
+    ["hot", tooHot],
+    ["cold", tooCold],
+    ["windy", tooWindy],
+  ];
+
+  weatherArr.sort(
+    (a: [string, number], b: [string, number]): number => b[1] - a[1]
+  );
+
+  const topCondition: [string, number] = weatherArr[0];
+  if (topCondition[1] === 0) {
+    return "Optimal";
+  }
+
+  if (topCondition[0] === "cold") {
     return viable ? "A bit cold" : "Too cold";
   }
-  if (tooHot > tooCold && tooHot > tooWet && tooHot > tooWindy) {
+
+  if (topCondition[0] === "hot") {
     return viable ? "A bit hot" : "Too hot";
   }
-  if (tooWindy > tooCold && tooWindy > tooWet && tooWindy > tooHot) {
-    return viable ? "A bit windy" : "Too windy";
-  }
-  if (tooWet > tooCold && tooWet > tooWindy && tooWet > tooHot) {
+
+  if (topCondition[0] === "wet") {
     return viable ? "A bit wet" : "Too wet";
   }
+
+  if (topCondition[0] === "windy") {
+    return viable ? "A bit windy" : "Too windy";
+  }
+
+  // should never reach here
   return "Optimal";
 }
