@@ -5,15 +5,22 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CityInput from "../CityInput/CityInput";
 import SettingsModal from "../SettingsModal/SettingsModal";
-
-import Link from "next/link";
+import { Link } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
   title: {
-    flexGrow: 1,
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
+      marginRight: "1rem",
+    },
+    textAlign: "left",
+  },
+  link: {
+    marginRight: "auto",
     display: "none",
     [theme.breakpoints.up("sm")]: {
       display: "block",
@@ -42,6 +49,13 @@ export default function NavHeader(): JSX.Element {
             <Link href="/">
               <a style={{ color: "black", textDecoration: "none" }}>
                 Inspect Next
+              </a>
+            </Link>
+          </Typography>
+          <Typography className={classes.link} noWrap>
+            <Link href="/articles">
+              <a style={{ color: "black", textDecoration: "underline" }}>
+                Articles
               </a>
             </Link>
           </Typography>

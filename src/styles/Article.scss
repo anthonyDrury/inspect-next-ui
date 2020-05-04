@@ -1,0 +1,38 @@
+.in-article {
+  padding: 1rem;
+  background-color: #d8d8dd;
+
+  &-paragraph {
+    margin-top: 1rem !important;
+  }
+
+  &__content-table {
+    margin-top: 1rem;
+    max-width: 20rem;
+    text-align: left;
+    background-color: #f4f4f4 !important;
+
+    .MuiCollapse-entered {
+      border-top: 1px solid #d8d8dd;
+    }
+  }
+
+  &__hero {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 1rem;
+    padding-top: 2rem;
+  }
+
+  &__content {
+    max-width: 60rem;
+    margin: 0 auto;
+    &-header {
+      margin-top: -5rem !important;
+      padding-top: 5rem !important;
+    }
+    text-align: left;
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+}

@@ -13,9 +13,10 @@ import {
 import NavHeader from "../components/NavHeader/NavHeader";
 import Footer from "../components/Footer/Footer";
 import { initGA, PageView } from "../common/analytics";
-import { orange, yellow } from "@material-ui/core/colors";
+import { orange, grey } from "@material-ui/core/colors";
 import Router from "next/dist/client/router";
 import "../styles/DayPreviewItem.scss";
+import "../styles/Article.scss";
 import "../styles/DayPreviewList.css";
 import "../styles/Footer.scss";
 import "../styles/HourInfoTable.scss";
@@ -55,7 +56,7 @@ const MyApp = (props: {
   const theme: Theme = createMuiTheme({
     palette: {
       primary: orange,
-      secondary: yellow,
+      secondary: grey,
     },
   });
   return (

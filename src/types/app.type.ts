@@ -8,3 +8,8 @@ export type Settings = {
 };
 
 export type Units = "Imperial" | "Metric";
+
+export type ContentLink = {
+  id: string;
+  label: string;
+};
