@@ -175,13 +175,13 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               ): void | "" => {
                 if (isDefined(e.target.value)) {
                   if (props?.state!.settings.units === "Metric") {
-                    updateWeatherVars({ optWindMax: Number(e.target.value) });
-                  } else {
                     updateWeatherVars({
                       optWindMax: kilometreHourToMetreSec(
                         Number(e.target.value)
                       ),
                     });
+                  } else {
+                    updateWeatherVars({ optWindMax: Number(e.target.value) });
                   }
                 }
               }}
@@ -306,13 +306,13 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               ): void | "" => {
                 if (isDefined(e.target.value)) {
                   if (props?.state!.settings.units === "Metric") {
-                    updateWeatherVars({ viaWindMax: Number(e.target.value) });
-                  } else {
                     updateWeatherVars({
                       viaWindMax: kilometreHourToMetreSec(
                         Number(e.target.value)
                       ),
                     });
+                  } else {
+                    updateWeatherVars({ viaWindMax: Number(e.target.value) });
                   }
                 }
               }}

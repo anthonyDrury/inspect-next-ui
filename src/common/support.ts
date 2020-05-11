@@ -114,8 +114,8 @@ export function getWindSpeed(
 ): number {
   return windSpeed !== undefined
     ? units === "Metric"
-      ? windSpeed
-      : metreSecToKilometreHour(windSpeed)
+      ? metreSecToKilometreHour(windSpeed)
+      : windSpeed
     : 0;
 }
 
