@@ -8,7 +8,7 @@ export interface Prediction {
   matchedSubstrings: MatchedSubstring[];
   terms: Term[];
   id?: string;
-  placeID?: string;
+  placeID: string;
   reference?: string;
   types?: string[];
 }
