@@ -13,4 +13,5 @@ export type CountryID = {
 export type AutocompleteOption = {
   description: string;
   terms: Term[];
+  placeID: string;
 };

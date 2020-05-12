@@ -30,44 +30,41 @@ export async function getFiveDay(
   state: State
 ): Promise<FiveDayReturnObj> {
   if (!isStateValid("fiveDay", state) && !state.loading) {
-    const response: Response = await fetch(
+    return fetch(
       `${API_URL}/fiveDay?cityName=${location.cityName}&countryName=${
         location.countryName
       }&units=${state.settings.units.toLowerCase()}`
-    );
-
-    // Typically means openWeather does not have the city
-    if (response.status !== 200) {
-      routeToNotFound();
-      return undefined;
-    }
-
-    const body: Promise<FiveDayForecast> = response.json().catch(() => {
-      routeToNotFound();
-      return Promise.resolve(undefined);
-    });
-
-    return body.then((data: FiveDayForecast):
-      | undefined
-      | {
-          forecast: FiveDayForecast;
-          mappedForecast: WeatherMap;
-          location: Location;
-          units: Units;
-        } => {
-      if (data.list === undefined || data.list.length === 0) {
-        routeToNotFound();
-        return undefined;
-      } else {
-        const mappedForecast: WeatherMap = mapListToWeatherMap(data.list);
-        return {
-          forecast: data,
-          mappedForecast,
-          location,
-          units: state.settings.units,
-        };
+    ).then(
+      (response: Response): Promise<FiveDayReturnObj> => {
+        // Typically means openWeather does not have the city
+        if (response.status !== 200) {
+          routeToNotFound();
+          return Promise.resolve(undefined);
+        }
+        const body: Promise<FiveDayForecast> = response.json().catch(
+          (): Promise<undefined> => {
+            routeToNotFound();
+            return Promise.resolve(undefined);
+          }
+        );
+        return body.then((data: FiveDayForecast):
+          | undefined
+          | FiveDayReturnObj => {
+          if (data.list === undefined || data.list.length === 0) {
+            routeToNotFound();
+            return undefined;
+          } else {
+            const mappedForecast: WeatherMap = mapListToWeatherMap(data.list);
+            return {
+              forecast: data,
+              mappedForecast,
+              location,
+              units: state.settings.units,
+            };
+          }
+        });
       }
-    });
+    );
   } else return undefined;
 }
 
@@ -87,7 +84,11 @@ export async function getAutocomplete(
   return body.then((data: AutocompleteResponse): AutocompleteOption[] => {
     return data.predictions.map(
       (value: Prediction): AutocompleteOption => {
-        return { description: value.description, terms: value.terms };
+        return {
+          description: value.description,
+          terms: value.terms,
+          placeID: value.placeID,
+        };
       }
     );
   });
