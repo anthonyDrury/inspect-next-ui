@@ -31,7 +31,7 @@ export async function getFiveDay(
 ): Promise<FiveDayReturnObj> {
   if (!isStateValid("fiveDay", state) && !state.loading) {
     return fetch(
-      `${API_URL}/fiveDay?cityName=${location.cityName}&countryName=${
+      `${API_URL}/fiveDay?address=${location.cityName},${
         location.countryName
       }&units=${state.settings.units.toLowerCase()}`
     ).then(
