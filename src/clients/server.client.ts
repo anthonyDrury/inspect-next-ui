@@ -33,7 +33,13 @@ export async function getFiveDay(
     return fetch(
       `${API_URL}/fiveDay?address=${location.cityName},${
         location.countryName
-      }&units=${state.settings.units.toLowerCase()}`
+      }&units=${state.settings.units.toLowerCase()}`,
+      {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+      }
     ).then(
       (response: Response): Promise<FiveDayReturnObj> => {
         // Typically means openWeather does not have the city
@@ -73,7 +79,10 @@ export async function getAutocomplete(
   sessionId: string
 ): Promise<AutocompleteOption[]> {
   const response: Response = await fetch(
-    `${API_URL}/autocomplete?input=${input}&session=${sessionId}`
+    `${API_URL}/autocomplete?input=${input}&session=${sessionId}`,
+    {
+      method: "GET",
+    }
   );
   const body: Promise<AutocompleteResponse> = response.json();
 

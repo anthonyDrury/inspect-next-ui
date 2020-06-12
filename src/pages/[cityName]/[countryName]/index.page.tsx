@@ -1,10 +1,6 @@
-import React, { Dispatch, useEffect } from "react";
-import { connect } from "react-redux";
-import {
-  State,
-  Action,
-  UpdateFiveDayPayload,
-} from "../../../types/redux.types";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { State } from "../../../types/redux.types";
 import DayPreviewList from "../../../components/DayPreviewList/DayPreviewList";
 import { updateLocation } from "../../../redux/actions/location.actions";
 import { Location } from "../../../types/location.type";
@@ -21,41 +17,44 @@ import { useRouter, NextRouter } from "next/router";
 import SpinnerFallback from "../../../components/SpinnerFallback/SpinnerFallback";
 
 type LocationSetProps = {
-  updateLocation?: (d: Location | undefined) => void;
-  updateFiveDay?: (f: UpdateFiveDayPayload) => void;
-  state?: State;
   params?: Location;
 };
 // displays the five day forecast
 function LocationSetPage(props?: LocationSetProps): JSX.Element {
   const router: NextRouter = useRouter();
   const query: Location = router.query as Location;
+  const state: State = useSelector((state: State) => state);
+  const dispatch = useDispatch();
 
   useEffect((): void => {
     updatePageDescription(
       `${query?.cityName}, ${query?.countryName} forecast`,
       `Five day forecast for ${query?.cityName}, ${query?.countryName}`
     );
-    if (props?.state !== undefined && !isFiveDayValid(props?.state, query)) {
+    if (state !== undefined && !isFiveDayValid(state, query)) {
       const safeParams: Location | undefined = mapFromUrlSafeLocation(query);
 
-      if (props?.updateLocation !== undefined && !props.state?.loading) {
-        if (!doLocationMatch(props.state.location, query)) {
-          props.updateLocation(safeParams);
+      if (!state.loading) {
+        if (!doLocationMatch(state.location, query)) {
+          dispatch(updateLocation(safeParams));
         }
         if (safeParams !== undefined) {
-          getFiveDay(safeParams, props.state).then(
+          getFiveDay(safeParams, state).then(
             (value: FiveDayReturnObj): void => {
-              if (value !== undefined && props?.updateFiveDay !== undefined) {
-                props.updateFiveDay({
-                  forecast: value.forecast,
-                  mappedForecast: value.mappedForecast,
-                  location: value.location,
-                  units: value.units,
-                });
+              dispatch({ type: "UPDATE_LOADING", payload: { loading: false } });
+              if (value !== undefined) {
+                dispatch(
+                  updateFiveDayForecast({
+                    forecast: value.forecast,
+                    mappedForecast: value.mappedForecast,
+                    location: value.location,
+                    units: value.units,
+                  })
+                );
               }
             }
           );
+          dispatch({ type: "UPDATE_LOADING", payload: { loading: true } });
         }
       }
     }
@@ -69,15 +68,15 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
           <br />
           {query?.cityName}, {query?.countryName}
         </Typography>
-        <SpinnerFallback condition={props?.state?.fiveDay !== undefined}>
-          {props?.state?.fiveDay !== undefined ? (
+        <SpinnerFallback condition={state.fiveDay !== undefined}>
+          {state.fiveDay !== undefined ? (
             <DayPreviewList
-              weatherMap={props!.state!.fiveDay?.mappedForecast}
-              weatherConditions={props!.state!.settings.inspectionWeatherVars}
-              utcOffset={props!.state!.fiveDay!.forecast.city.timezone}
-              sunsetTime={props!.state!.fiveDay!.forecast.city.sunset}
-              sunriseTime={props!.state!.fiveDay!.forecast.city.sunrise}
-              units={props!.state!.settings.units}
+              weatherMap={state.fiveDay?.mappedForecast}
+              weatherConditions={state.settings.inspectionWeatherVars}
+              utcOffset={state.fiveDay!.forecast.city.timezone}
+              sunsetTime={state.fiveDay!.forecast.city.sunset}
+              sunriseTime={state.fiveDay!.forecast.city.sunrise}
+              units={state.settings.units}
             ></DayPreviewList>
           ) : null}
         </SpinnerFallback>
@@ -86,27 +85,4 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
   );
 }
 
-function mapStateToProps(
-  state: State,
-  ownProps: LocationSetProps
-): LocationSetProps {
-  return { state, ...ownProps };
-}
-
-const mapDispatchToProps: (
-  d: Dispatch<Action>,
-  o: LocationSetProps
-) => LocationSetProps = (
-  dispatch: Dispatch<Action>,
-  ownProps: LocationSetProps
-): LocationSetProps => {
-  return {
-    updateLocation: (d: Location | undefined): void =>
-      dispatch(updateLocation(d)),
-    updateFiveDay: (f: UpdateFiveDayPayload): void =>
-      dispatch(updateFiveDayForecast(f)),
-    ...ownProps,
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(LocationSetPage);
+export default LocationSetPage;
