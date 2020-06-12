@@ -12,13 +12,9 @@ Installation:
 
 `npm install`
 
-To Run Test Suite:
+To Start the Server locally:
 
-`npm test`
-
-To Start Server:
-
-`npm start`
+`npm run dev`
 
 To Visit App:
 
