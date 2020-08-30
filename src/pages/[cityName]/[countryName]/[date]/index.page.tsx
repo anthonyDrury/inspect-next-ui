@@ -311,6 +311,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
               <HourInfoTable
                 weatherPreview={localState.weatherPreview!.viableTypes}
                 units={state?.settings.units}
+                utcOffset={state.fiveDay?.forecast.city.timezone || 60}
               />
             ) : null}
           </Grid>
