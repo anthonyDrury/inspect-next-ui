@@ -60,7 +60,10 @@ export async function getFiveDay(
             routeToNotFound();
             return undefined;
           } else {
-            const mappedForecast: WeatherMap = mapListToWeatherMap(data.list);
+            const mappedForecast: WeatherMap = mapListToWeatherMap(
+              data.list,
+              data.city.timezone
+            );
             return {
               forecast: data,
               mappedForecast,

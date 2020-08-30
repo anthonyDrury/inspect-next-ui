@@ -11,15 +11,20 @@ import {
 
 // Used to map the weatherAPI response into a map of Map<date_key, Map<hour_key, weatherItem>>
 export function mapListToWeatherMap(
-  list: WeatherListItem[]
+  list: WeatherListItem[],
+  utcOffset: number
 ): Map<string, Map<string, WeatherListItem>> {
   // Map of Dates
   // Includes Map of hour-times
   const dayList: Map<string, Map<string, WeatherListItem>> = new Map();
 
   list.forEach((item: WeatherListItem): void => {
-    const dateOf: string = moment(item.dt_txt).format("DD-MM");
-    const hourOf: string = moment(item.dt_txt).format("HH");
+    const dateOf: string = getWeatherTimeToLocal(item.dt_txt, utcOffset).format(
+      "DD-MM"
+    );
+    const hourOf: string = getWeatherTimeToLocal(item.dt_txt, utcOffset).format(
+      "HH"
+    );
 
     // If Date is not present, add
     if (!dayList.has(dateOf)) {
@@ -69,9 +74,13 @@ export function getWeatherInfo(
       snowAmount += listItem.snow["3h"];
     }
 
-    if (moment(listItem.dt_txt).format("h A") === "3 PM") {
+    if (
+      getWeatherTimeToLocal(listItem.dt_txt, utcOffset).format("h A") === "3 PM"
+    ) {
       three = listItem;
-    } else if (moment(listItem.dt_txt).format("h A") === "9 AM") {
+    } else if (
+      getWeatherTimeToLocal(listItem.dt_txt, utcOffset).format("h A") === "9 AM"
+    ) {
       nine = listItem;
     }
   });
@@ -117,8 +126,8 @@ function isWeatherViable(
     .utcOffset(utcOffset / 60)
     .hours();
   const isDaylight: boolean =
-    moment(weatherItem.dt_txt).hours() >= sunrise &&
-    moment(weatherItem.dt_txt).hours() < sunset;
+    getWeatherTimeToLocal(weatherItem.dt_txt, utcOffset).hours() >= sunrise &&
+    getWeatherTimeToLocal(weatherItem.dt_txt, utcOffset).hours() < sunset;
   const isRainViable: boolean =
     weatherItem.rain === undefined ||
     weatherItem.rain["3h"] <= weatherVars.viaRainMax;
@@ -153,8 +162,8 @@ function isWeatherOptimal(
     .utcOffset(utcOffset / 60)
     .hours();
   const isDaylight: boolean =
-    moment(weatherItem.dt_txt).hours() >= sunrise &&
-    moment(weatherItem.dt_txt).hours() < sunset;
+    getWeatherTimeToLocal(weatherItem.dt_txt, utcOffset).hours() >= sunrise &&
+    getWeatherTimeToLocal(weatherItem.dt_txt, utcOffset).hours() < sunset;
   const isRainOptimal: boolean =
     weatherItem.rain === undefined ||
     weatherItem.rain["3h"] <= weatherVars.optRainMax;
@@ -375,4 +384,11 @@ function getMainReasonForDay(
 
   // should never reach here
   return "Optimal";
+}
+
+export function getWeatherTimeToLocal(
+  time: moment.Moment | string | Date,
+  offset: number
+) {
+  return moment.utc(time).utcOffset(offset / 60);
 }

@@ -167,7 +167,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               style={{ maxWidth: "15rem" }}
               value={getWindSpeed(
                 props?.state?.settings.inspectionWeatherVars.optWindMax,
-                props?.state!.settings.units
+                props?.state!.settings.units!
               )}
               variant="filled"
               onChange={(
@@ -298,7 +298,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               style={{ maxWidth: "15rem" }}
               value={getWindSpeed(
                 props?.state?.settings.inspectionWeatherVars.viaWindMax,
-                props?.state!.settings.units
+                props?.state!.settings.units!
               )}
               variant="filled"
               onChange={(
