@@ -24,7 +24,10 @@ import {
 } from "@material-ui/core";
 import { Units } from "../../types/app.type";
 import { orange } from "@material-ui/core/colors";
-import { getWeatherInfo } from "../../common/weather.support";
+import {
+  getWeatherInfo,
+  getWeatherTimeToLocal,
+} from "../../common/weather.support";
 import { getRainAmount, getWindSpeed } from "../../common/support";
 import Router from "next/dist/client/router";
 import Link from "next/link";
@@ -78,7 +81,7 @@ function DayPreviewItem(props: {
   return (
     <ExpansionPanel
       style={{ flex: "100%" }}
-      onChange={(e: any, expanded: boolean) =>
+      onChange={(e: any, expanded: boolean): void =>
         setLocalState({ ...localState, expanded })
       }
     >
@@ -143,16 +146,18 @@ function DayPreviewItem(props: {
           </Typography>
         </div>
         <Tooltip
-          title={moment(
-            localState.weatherPreview?.defaultWeather.dt_txt
+          title={getWeatherTimeToLocal(
+            localState.weatherPreview?.defaultWeather.dt_txt,
+            props.utcOffset
           ).format("YYYY-MMM-DD")}
           arrow
         >
           <div className="in-day-preview-item__date-container">
             <Typography variant="h5" component="p">
-              {moment(localState.weatherPreview?.defaultWeather.dt_txt).format(
-                "dddd"
-              )}
+              {getWeatherTimeToLocal(
+                localState.weatherPreview?.defaultWeather.dt_txt,
+                props.utcOffset
+              ).format("dddd")}
             </Typography>
             <Typography variant="h6" component="p">
               {localState.weatherPreview?.defaultWeather.weather[0].description}
@@ -285,7 +290,12 @@ function DayPreviewItem(props: {
                         </div>
 
                         <div className="in-day-preview-item__preview-container">
-                          <p>{moment(time.weather.dt_txt).format("h A")}</p>
+                          <p>
+                            {getWeatherTimeToLocal(
+                              time.weather.dt_txt,
+                              props.utcOffset
+                            ).format("h A")}
+                          </p>
                           <p>{`${time.weather.main.temp}° ${
                             props.units === "Imperial" ? "F" : "C"
                           }`}</p>

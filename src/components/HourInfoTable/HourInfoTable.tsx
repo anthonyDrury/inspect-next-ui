@@ -1,6 +1,5 @@
 import React from "react";
 import { Units } from "../../types/app.type";
-import moment from "moment";
 import { Grid, Typography, Tooltip } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,17 +8,22 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { WeatherValidity, ViableWeather } from "../../types/weather.type";
 import { getRainAmount, getWindSpeed } from "../../common/support";
+import { getWeatherTimeToLocal } from "../../common/weather.support";
 
 type HourInfoProps = {
   weatherPreview: ViableWeather | undefined;
   units: Units | undefined;
+  utcOffset: number;
 };
-function HourInfoTable(props?: HourInfoProps): JSX.Element {
+function HourInfoTable(props: HourInfoProps): JSX.Element {
   function getHourGridItem(
     weatherItem: WeatherValidity,
     index: number
   ): JSX.Element {
-    const hour: string = moment(weatherItem.weather.dt_txt).format("hh A");
+    const hour: string = getWeatherTimeToLocal(
+      weatherItem.weather.dt_txt,
+      props.utcOffset
+    ).format("hh A");
     return (
       <Grid
         key={index}
