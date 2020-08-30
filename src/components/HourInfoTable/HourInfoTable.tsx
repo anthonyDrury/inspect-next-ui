@@ -1,6 +1,5 @@
 import React from "react";
 import { Units } from "../../types/app.type";
-import moment from "moment";
 import { Grid, Typography, Tooltip } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
